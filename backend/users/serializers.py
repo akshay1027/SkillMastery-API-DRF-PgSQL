@@ -35,7 +35,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class CurrentUserSerializer(serializers.ModelSerializer):
-    profile = serializers.SerializerMethodField(read_only=True)
+    # profile = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
@@ -47,12 +47,13 @@ class CurrentUserSerializer(serializers.ModelSerializer):
     #     return serializer.data
 
 
+# Get all users
 class UserSerializer(serializers.ModelSerializer):
-    profile = serializers.SerializerMethodField(read_only=True)
+    # profile = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'username']
+        fields = ['id', 'username', 'name']
 
     # def get_profile(self, obj):
     #     profile = obj.userprofile
@@ -71,10 +72,10 @@ class UserSerializerWithToken(UserSerializer):
         model = User
         exclude = ['password']
 
-    def get_profile(self, obj):
-        print('object =', obj)
-        serializer = UserProfileSerializer(obj, many=False)
-        return serializer.data
+    # def get_profile(self, obj):
+    #     print('object =', obj)
+    #     serializer = UserProfileSerializer(obj, many=False)
+    #     return serializer.data
 
     def get_access(self, obj):
         print('isnide function')

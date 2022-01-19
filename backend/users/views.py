@@ -26,8 +26,8 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .models import User
-from .serializers import (UserSerializerWithToken)
+from .models import User, SkillTag, TopicTag
+from .serializers import (UserSerializerWithToken, UserSerializer)
 
 
 @api_view(['GET'])
@@ -102,3 +102,18 @@ class RegisterView(APIView):
             return Response({'detail': f'{e}'}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def users(request):
+    query = request.query_params.get('q') or ''
+    users = User.objects.filter(
+        Q(name__icontains=query) |
+        Q(username__icontains=query)
+    )
+    print('here mate')
+    paginator = PageNumberPagination()
+    paginator.page_size = 10
+    result_page = paginator.paginate_queryset(users, request)
+    serializer = UserSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
