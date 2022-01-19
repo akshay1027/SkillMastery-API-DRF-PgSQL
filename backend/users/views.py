@@ -30,16 +30,6 @@ from .models import User, SkillTag, TopicTag
 from .serializers import (UserSerializerWithToken, UserSerializer)
 
 
-@api_view(['GET'])
-def getAllRoutes(request):
-    routes = [
-        '/api/token',
-        '/api/token/refresh',
-    ]
-
-    return Response(routes)
-
-
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -51,11 +41,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
 
-class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
-
-
-# Register user.
+# Register user
 # get the data -> check if data is valid -> save to db
 class RegisterView(APIView):
     permission_classes = [permissions.AllowAny]
@@ -104,6 +90,7 @@ class RegisterView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+# Get all users with pagination (max 10 per request)
 @api_view(['GET'])
 def users(request):
     query = request.query_params.get('q') or ''
@@ -117,3 +104,8 @@ def users(request):
     result_page = paginator.paginate_queryset(users, request)
     serializer = UserSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
+
+
+# Login user
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
