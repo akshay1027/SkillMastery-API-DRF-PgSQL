@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 import datetime
 from email.policy import HTTP
 from multiprocessing import AuthenticationError
@@ -28,13 +29,13 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import User, SkillTag, TopicTag
 from .serializers import (UserSerializerWithToken, UserSerializer)
+from backend.users import serializers
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-
         # Add custom claims
         token['username'] = user.username
 
@@ -43,7 +44,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 # Register user
 # get the data -> check if data is valid -> save to db
-class RegisterView(APIView):
+class RegisterUser(APIView):
     permission_classes = [permissions.AllowAny]
     Authentication_classes = []
 
@@ -93,14 +94,16 @@ class RegisterView(APIView):
 # Get all users with pagination (max 10 per request)
 @api_view(['GET'])
 def users(request):
+    # get the query from api endpoint, here no query hence its '', which will return all the values
     query = request.query_params.get('q') or ''
+    # filter them
     users = User.objects.filter(
         Q(name__icontains=query) |
         Q(username__icontains=query)
     )
     print('here mate')
     paginator = PageNumberPagination()
-    paginator.page_size = 10
+    paginator.page_size = 8
     result_page = paginator.paginate_queryset(users, request)
     serializer = UserSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
@@ -109,3 +112,23 @@ def users(request):
 # Login user
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+
+# User Details
+@api_view(['GET'])
+def UserDetails(request, username):
+    user = User.objects.get(username=username)
+
+    serializer = UserSerializer(user, many=False)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# User recommendation system
+@api_view(['GET'])
+@permission_classes((IsAuthenticated,))
+def users_recommended(request):
+    user = request.user
+    users = User.objects.annotate(followers_count=Count('userprofile__followers')).order_by(
+        'followers_count').reverse().exclude(id=user.id)[0:5]
+    serializer = UserSerializer(users, many=True)
+    return Response(serializer.data)

@@ -4,6 +4,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User, TopicTag, SkillTag
 
+# if we are using serializers.ModelSerializer, we need to use model name and then serializer (conviction)
+
 
 class TopicTagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -35,16 +37,16 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class CurrentUserSerializer(serializers.ModelSerializer):
-    # profile = serializers.SerializerMethodField(read_only=True)
+    profile = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
         fields = ['id', 'username', 'email']
 
-    # def get_profile(self, obj):
-    #     profile = obj.userprofile
-    #     serializer = UserProfileSerializer(profile, many=False)
-    #     return serializer.data
+    def get_profile(self, obj):
+        profile = obj.userprofile
+        serializer = UserProfileSerializer(profile, many=False)
+        return serializer.data
 
 
 # Get all users
