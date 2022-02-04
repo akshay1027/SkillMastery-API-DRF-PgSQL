@@ -7,22 +7,22 @@ from rest_framework_simplejwt.views import (
 )
 
 urlpatterns = [
-    path('', views.users, name='users'),
+    path('users/', views.users, name='users'),
     path('register/', views.RegisterUser.as_view(), name='register'),
     path('login/', views.MyTokenObtainPairView.as_view(), name='login'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
-    path('<str:username>/', views.UserDetails, name="user"),
+    path('users/<str:username>/', views.UserDetails, name="user"),
 
-    path('profile_update/', views.UserProfileUpdate, name='profile_update'),
-    path('profile_update/skills/', views.UserSkillsUpdate, name='skills_update'),
-    path('profile_update/interests/',
-         views.UserInterestsUpdate, name='interests_update'),
+    # path('profile_update/', views.UserProfileUpdate, name='profile_update'),
+    # path('profile_update/skills/', views.UserSkillsUpdate, name='skills_update'),
+    # path('profile_update/interests/',
+    #      views.UserInterestsUpdate, name='interests_update'),
 
-    path('skills/<str:skill>/', views.usersBySkill, name="users-by-skill"),
+    # path('skills/<str:skill>/', views.usersBySkill, name="users-by-skill"),
 
 
-    path('delete-profile/', views.DeleteUser, name="delete-user"),
+    # path('delete-profile/', views.DeleteUser, name="delete-user"),
 
 
 
