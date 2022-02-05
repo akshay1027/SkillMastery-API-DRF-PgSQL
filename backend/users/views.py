@@ -29,7 +29,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import User, SkillTag, TopicTag
 from .serializers import (UserSerializerWithToken, UserSerializer)
-from backend.users import serializers
+from users import serializers
+# from backend.users import serializers
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -44,6 +45,11 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 # Register user
 # get the data -> check if data is valid -> save to db
+
+# Am getting following error while serializing!
+# Got AttributeError when attempting to get a value for field `password` on serializer `UserProfileSerializer`.
+# The serializer field might be named incorrectly and not match any attribute or key on the `str` instance.
+# Original exception text was: 'str' object has no attribute 'password'.
 class RegisterUser(APIView):
     permission_classes = [permissions.AllowAny]
     Authentication_classes = []
@@ -81,9 +87,9 @@ class RegisterUser(APIView):
                 email=email,
                 password=make_password(password),
             )
-            print('user created')
+            # print('user created')
             serializer = UserSerializerWithToken(user, many=False)
-            print(serializer.data)
+            # print(serializer.data)
         except Exception as e:
             print(e)
             return Response({'detail': f'{e}'}, status=status.HTTP_400_BAD_REQUEST)
@@ -91,42 +97,69 @@ class RegisterUser(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-# Get all users with pagination (max 10 per request)
-@api_view(['GET'])
-def users(request):
-    # get the query from api endpoint, here no query hence its '', which will return all the values
-    query = request.query_params.get('q') or ''
-    # filter them
-    users = User.objects.filter(
-        Q(name__icontains=query) |
-        Q(username__icontains=query)
-    )
-    print('here mate')
-    paginator = PageNumberPagination()
-    paginator.page_size = 8
-    result_page = paginator.paginate_queryset(users, request)
-    serializer = UserSerializer(result_page, many=True)
-    return paginator.get_paginated_response(serializer.data)
-
-
 # Login user
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
 
+# Get all users with pagination (max 10 per request)
+@api_view(['GET'])
+def users(request):
+    # get the query from api endpoint, here no query hence its '', which will return all the
+    pageSize = request.query_params.get('pageSize') or 10
+    query = request.query_params.get('q') or ''
+    # filter them
+    users = User.objects.filter(
+        Q(username__icontains=query)
+    )
+    # initliase page size
+    paginator = PageNumberPagination()
+    paginator.page_size = pageSize
+    result_page = paginator.paginate_queryset(users, request)
+    serializer = UserSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
+
+
 # User Details
 @api_view(['GET'])
-def UserDetails(request, username):
+def userDetails(request, username):
     user = User.objects.get(username=username)
 
     serializer = UserSerializer(user, many=False)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+# User update skills
+@api_view(['PATCH'])
+def userSkills(request, username):
+    user = User.objects.get(username=username)
+    # sending skills in list ds
+    skills = request.data
+    user.skills.set(
+        SkillTag.objects.get_or_create(name=skill)[0] for skill in skills
+    )
+    user.save()
+    serializer = UserSerializer(user, many=False)
+    return Response(serializer.data)
+
+
+# User update interests
+@api_view(['PATCH'])
+def userInterests(request, username):
+    user = User.objects.get(username=username)
+    interests = request.data
+    user.interests.set(
+        TopicTag.objects.get_or_create(name=interest)[0] for interest in interests
+    )
+    user.save()
+    serializer = UserSerializer(user, many=False)
+    return Response(serializer.data)
+
+
 # User recommendation system
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
-def users_recommended(request):
+def usersRecommended(request):
     user = request.user
     users = User.objects.annotate(followers_count=Count('userprofile__followers')).order_by(
         'followers_count').reverse().exclude(id=user.id)[0:5]

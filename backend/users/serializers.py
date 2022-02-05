@@ -1,3 +1,4 @@
+from dataclasses import fields
 from rest_framework import serializers
 # from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -21,12 +22,12 @@ class SkillTagSerializer(serializers.ModelSerializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     profile_pic = serializers.SerializerMethodField(read_only=True)
-    interests = TopicTagSerializer(many=True, read_only=True)
-    skills = SkillTagSerializer(many=True, read_only=True)
+    # interests = TopicTagSerializer(many=True, read_only=True)
+    # skills = SkillTagSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ['id', 'username', 'email', 'profile_pic']
 
     def get_profile_pic(self, obj):
         try:
@@ -37,7 +38,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class CurrentUserSerializer(serializers.ModelSerializer):
-    profile = serializers.SerializerMethodField(read_only=True)
+    email = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
@@ -51,44 +52,35 @@ class CurrentUserSerializer(serializers.ModelSerializer):
 
 # Get all users
 class UserSerializer(serializers.ModelSerializer):
-    # profile = serializers.SerializerMethodField(read_only=True)
+    # username = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'name']
+        fields = ['username', 'id', 'isTutor',
+                  'profile_pic', 'skills', 'interests']
 
-    # def get_profile(self, obj):
-    #     profile = obj.userprofile
+    # def get_username(self, obj):
+    #     profile = obj
     #     serializer = UserProfileSerializer(profile, many=False)
     #     return serializer.data
 
 
-# regsuter user
+# register user
 class UserSerializerWithToken(UserSerializer):
-    print('here')
+    # print('here')
     access = serializers.SerializerMethodField(read_only=True)
     refresh = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
-        print('here meta')
         model = User
         exclude = ['password']
 
-    # def get_profile(self, obj):
-    #     print('object =', obj)
-    #     serializer = UserProfileSerializer(obj, many=False)
-    #     return serializer.data
-
     def get_access(self, obj):
-        print('isnide function')
+        # print('isnide function')
         token = RefreshToken.for_user(obj)
 
         token['username'] = obj.username
-        # token['name'] = obj.userprofile.name
-        # token['profile_pic'] = obj.userprofile.profile_pic.url
-        # token['is_staff'] = obj.is_staff
         token['id'] = str(obj.id)
-        # print()
         return str(token.access_token)
 
     def get_refresh(self, obj):
