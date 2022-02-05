@@ -29,6 +29,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import User, SkillTag, TopicTag
 from .serializers import (UserSerializerWithToken, UserSerializer)
+from users import serializers
 # from backend.users import serializers
 
 
@@ -121,17 +122,44 @@ def users(request):
 
 # User Details
 @api_view(['GET'])
-def UserDetails(request, username):
+def userDetails(request, username):
     user = User.objects.get(username=username)
 
     serializer = UserSerializer(user, many=False)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+# User update skills
+@api_view(['PATCH'])
+def userSkills(request, username):
+    user = User.objects.get(username=username)
+    # sending skills in list ds
+    skills = request.data
+    user.skills.set(
+        SkillTag.objects.get_or_create(name=skill)[0] for skill in skills
+    )
+    user.save()
+    serializer = UserSerializer(user, many=False)
+    return Response(serializer.data)
+
+
+# User update interests
+@api_view(['PATCH'])
+def userInterests(request, username):
+    user = User.objects.get(username=username)
+    interests = request.data
+    user.interests.set(
+        TopicTag.objects.get_or_create(name=interest)[0] for interest in interests
+    )
+    user.save()
+    serializer = UserSerializer(user, many=False)
+    return Response(serializer.data)
+
+
 # User recommendation system
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
-def users_recommended(request):
+def usersRecommended(request):
     user = request.user
     users = User.objects.annotate(followers_count=Count('userprofile__followers')).order_by(
         'followers_count').reverse().exclude(id=user.id)[0:5]

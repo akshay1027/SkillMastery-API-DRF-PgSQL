@@ -12,13 +12,16 @@ urlpatterns = [
     path('login/', views.MyTokenObtainPairView.as_view(), name='login'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
-    path('users/<str:username>/', views.UserDetails, name="user"),
+    path('users/<str:username>/', views.userDetails, name="user"),
+    path('users/<str:username>/update-skills',
+         views.userSkills, name="user_skills"),
+    path('users/<str:username>/update-interests',
+         views.userInterests, name="user_interests")
 
     # path('profile_update/', views.UserProfileUpdate, name='profile_update'),
     # path('profile_update/skills/', views.UserSkillsUpdate, name='skills_update'),
     # path('profile_update/interests/',
-    #      views.UserInterestsUpdate, name='interests_update'),
-
+    # views.UserInterestsUpdate, name='interests_update'),
     # path('skills/<str:skill>/', views.usersBySkill, name="users-by-skill"),
 
 
