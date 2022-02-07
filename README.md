@@ -34,12 +34,13 @@
 
 ### Response: 
 
-    ```
+ ```
 {
     "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY0NDAyNzU4OSwiaWF0IjoxNjQzOTQxMTg5LCJqdGkiOiI0MGM5OTBlZTAxODU0OWE1OTg1YmE2MTdjZTJlNjRlMCIsInVzZXJfaWQiOiIyYTBjNDdmMC00MDMzLTQzZTEtYWJjYS01YzE3NmQ5NGMyNDciLCJ1c2VybmFtZSI6InRvbTIwIn0.EG3Ej7iulP0WYPdKHgeZ5qu0ssqqQZvvnsv0fTlOvCM",
+
     "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQzOTYyNzg5LCJpYXQiOjE2NDM5NDExODksImp0aSI6IjA2YTEyYmQ0MGU1ODQyOTk4Njk3Y2QzMWIzMTkyYTllIiwidXNlcl9pZCI6IjJhMGM0N2YwLTQwMzMtNDNlMS1hYmNhLTVjMTc2ZDk0YzI0NyIsInVzZXJuYW1lIjoidG9tMjAifQ._m_llB1rf1Nso6Rk5FWJA5ZxmPB68ui_PJucnnQh70E"
 }
-    ```
+```
 
 ## 2)  
 | Login | Login user, Return JWT tokens |
@@ -62,12 +63,12 @@
 
 ### Response: 
 
-    ```
+ ```
 {
     "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY0NDAyNzU4OSwiaWF0IjoxNjQzOTQxMTg5LCJqdGkiOiI0MGM5OTBlZTAxODU0OWE1OTg1YmE2MTdjZTJlNjRlMCIsInVzZXJfaWQiOiIyYTBjNDdmMC00MDMzLTQzZTEtYWJjYS01YzE3NmQ5NGMyNDciLCJ1c2VybmFtZSI6InRvbTIwIn0.EG3Ej7iulP0WYPdKHgeZ5qu0ssqqQZvvnsv0fTlOvCM",
     "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQzOTYyNzg5LCJpYXQiOjE2NDM5NDExODksImp0aSI6IjA2YTEyYmQ0MGU1ODQyOTk4Njk3Y2QzMWIzMTkyYTllIiwidXNlcl9pZCI6IjJhMGM0N2YwLTQwMzMtNDNlMS1hYmNhLTVjMTc2ZDk0YzI0NyIsInVzZXJuYW1lIjoidG9tMjAifQ._m_llB1rf1Nso6Rk5FWJA5ZxmPB68ui_PJucnnQh70E"
 }
-    ```
+```
 
 
 
@@ -82,7 +83,7 @@
 
 ### Example Response: 
 
-    ```
+```
 {
     "count": 21,
     "next": "http://127.0.0.1:8000/api/v1/users/?page=2&pageSize=5",
@@ -110,7 +111,7 @@
         }
     ]
 }
-    ```
+```
 
 ## 4)  
 | Single user details | Get single user detail. |
@@ -156,7 +157,7 @@
 
 ### Response: 
 
-    ```
+```
 {
     "username": "tom4",
     "id": "40831cc2-703b-4a57-a04a-3950997b292c",
@@ -170,7 +171,7 @@
     ],
     "interests": []
 }
-    ```
+```
 
 
 ## 6)  
@@ -194,7 +195,7 @@
 
 ### Response: 
 
-    ```
+```
 {
     "username": "tom4",
     "id": "40831cc2-703b-4a57-a04a-3950997b292c",
@@ -211,7 +212,7 @@
         "programming"
     ]
 }
-    ```
+```
 
 
 ## Challenges vs How i solved them
