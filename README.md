@@ -9,6 +9,7 @@
 - [x] Learnt about serializers
 - [x] DRF querysets
 - [x] Custom JWT authetication
+- [x] User Recomendation & Notifications using celery/multi-threading
 
 ## API ENDPOINTS: 
 
