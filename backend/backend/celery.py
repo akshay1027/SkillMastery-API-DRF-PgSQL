@@ -2,6 +2,8 @@ import os
 
 from celery import Celery
 
+# celery is a async message queue to perform background tasks outside request response cycle
+
 # First, we set a default value for the DJANGO_SETTINGS_MODULE environment variable so that Celery will know how to find the Django project.
 # Next, we created a new Celery instance, with the name core, and assigned the value to a variable called app.
 # We then loaded the celery configuration values from the settings object from django.conf. We used namespace="CELERY" to prevent clashes with other Django settings.
