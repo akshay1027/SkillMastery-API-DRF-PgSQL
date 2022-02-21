@@ -1,4 +1,3 @@
-
 from django.urls import path
 from . import views
 
@@ -16,7 +15,8 @@ urlpatterns = [
     path('users/<str:username>/update-skills',
          views.userSkills, name="user_skills"),
     path('users/<str:username>/update-interests',
-         views.userInterests, name="user_interests")
+         views.userInterests, name="user_interests"),
+    path('sendmail/', views.sendMailToALL, name="sendmail"),
 
     # path('profile_update/', views.UserProfileUpdate, name='profile_update'),
     # path('profile_update/skills/', views.UserSkillsUpdate, name='skills_update'),

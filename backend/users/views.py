@@ -32,6 +32,8 @@ from .serializers import (UserSerializerWithToken, UserSerializer)
 from users import serializers
 # from backend.users import serializers
 
+from .task import sendMailFunc
+
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -165,3 +167,9 @@ def usersRecommended(request):
         'followers_count').reverse().exclude(id=user.id)[0:5]
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+def sendMailToALL(request):
+    sendMailFunc.delay()
+    return Response("done")
